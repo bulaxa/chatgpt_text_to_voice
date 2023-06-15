@@ -14,8 +14,6 @@ export class GptVoiceService {
       text_response.data.choices[0],
     );
 
-    //const voice_request = await this.elevenlabs.request(createGptVoiceDto);
-
     return voice_request;
   }
 

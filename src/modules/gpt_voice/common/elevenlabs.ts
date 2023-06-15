@@ -38,7 +38,7 @@ export class Elevenlabs {
     const arrayBuffer = await response.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
-    fs.writeFile('voice.mp3', buffer, (file) => {
+    fs.writeFile('/voices/voice.mp3', buffer, (file) => {
       console.log(file);
     });
     return JSON.stringify({
