@@ -1,8 +1,5 @@
-import { HttpService } from '@nestjs/axios';
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import axios, { AxiosError, AxiosRequestConfig } from 'axios';
-import { catchError, firstValueFrom, map } from 'rxjs';
 import { CreateGptVoiceDto } from '../dto/create-gpt_voice.dto';
 import * as fs from 'fs';
 
@@ -17,33 +14,42 @@ export class Elevenlabs {
       voiceData.PATH +
       voiceData.POST +
       '21m00Tcm4TlvDq8ikWAM?optimize_streaming_latency=0';
-
-    const response = await fetch(urlCreateVoice, {
-      method: 'POST',
-      headers: {
-        accept: 'audio/mpeg',
-        'content-type': 'application/json',
-        'xi-api-key': voiceData.KEY,
-      },
-      body: JSON.stringify({
-        text: content.text,
-        model_id: 'eleven_multilingual_v1',
-        voice_settings: {
-          stability: 0,
-          similarity_boost: 0,
+    try {
+      const response = await fetch(urlCreateVoice, {
+        method: 'POST',
+        headers: {
+          accept: 'audio/mpeg',
+          'content-type': 'application/json',
+          'xi-api-key': voiceData.KEY,
         },
-      }),
-    });
+        body: JSON.stringify({
+          text: content.text,
+          model_id: 'eleven_multilingual_v1',
+          voice_settings: {
+            stability: 0,
+            similarity_boost: 0,
+          },
+        }),
+      });
 
-    const arrayBuffer = await response.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
-
-    fs.writeFile('/voices/voice.mp3', buffer, (file) => {
-      console.log(file);
-    });
-    return JSON.stringify({
-      arquivo: 'voice.mp3',
-      status: 'OK',
-    });
+      if (response.status != HttpStatus.OK) {
+        return {
+          arquivo: null,
+          status: response.statusText,
+          data: null,
+        };
+      }
+      const arrayBuffer = await response.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
+      const fileName = './voices/voice.mp3';
+      fs.writeFileSync(fileName, buffer);
+      return {
+        arquivo: fileName,
+        status: response.statusText,
+        data: buffer.toString('base64'),
+      };
+    } catch (error) {
+      console.log(error);
+    }
   }
 }

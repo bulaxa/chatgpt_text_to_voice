@@ -9,4 +9,7 @@ export default () => ({
     KEY: process.env.ELEVENLABS_API_KEY,
     POST: process.env.TEXT_TO_VOICE,
   },
+  JWT: {
+    TOKEN: process.env.JWT_TOKEN,
+  },
 });

@@ -9,12 +9,16 @@ export class GptVoiceService {
   constructor(private elevenlabs: Elevenlabs, private openai: Openai) {}
 
   async create(createGptVoiceDto: CreateGptVoiceDto) {
-    const text_response = await this.openai.request(createGptVoiceDto);
-    const voice_request = await this.elevenlabs.request(
-      text_response.data.choices[0],
-    );
+    try {
+      const text_response = await this.openai.request(createGptVoiceDto);
+      const voice_request = await this.elevenlabs.request(
+        text_response.data.choices[0],
+      );
 
-    return voice_request;
+      return voice_request;
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   findAll() {

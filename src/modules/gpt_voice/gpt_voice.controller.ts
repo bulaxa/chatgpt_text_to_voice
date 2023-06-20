@@ -7,13 +7,11 @@ import {
   Param,
   Delete,
   Res,
-  HttpCode,
 } from '@nestjs/common';
 import { GptVoiceService } from './gpt_voice.service';
 import { UpdateGptVoiceDto } from './dto/update-gpt_voice.dto';
 import { CreateGptVoiceDto } from './dto/create-gpt_voice.dto';
 import type { Response } from 'express';
-import { HttpStatusCode } from 'axios';
 
 @Controller('gpt-voice')
 export class GptVoiceController {
@@ -25,8 +23,10 @@ export class GptVoiceController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const resultData = await this.gptVoiceService.create(createGptVoiceDto);
-
-    res.status(HttpStatusCode.Ok).send(resultData.data);
+    res.set({
+      'Content-Type': 'application/json',
+    });
+    res.send(resultData);
   }
 
   @Get()

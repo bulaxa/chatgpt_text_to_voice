@@ -4,7 +4,9 @@ import { GptTextModule } from './modules/gpt_text/gpt_text.module';
 import { ConfigModule } from '@nestjs/config';
 import { HttpModule } from '@nestjs/axios';
 import { GptVoiceModule } from './modules/gpt_voice/gpt_voice.module';
+import { AuthModule } from './modules/auth/auth.module';
 import config from './config/config';
+import { UsersModule } from './modules/users/users.module';
 
 @Module({
   imports: [
@@ -15,6 +17,8 @@ import config from './config/config';
     GptTextModule,
     HttpModule,
     GptVoiceModule,
+    AuthModule,
+    UsersModule,
   ],
   controllers: [],
   providers: [AppService],
