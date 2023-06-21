@@ -1,0 +1,38 @@
+version: '3.7'
+
+services:
+    db:
+        image: mysql:5.7
+        command: --default-authentication-plugin=mysql_native_password
+        container_name: gpt-mysql
+        ports:
+            - "3309:3036"
+        environment:
+            MYSQL_DATABASE: gpt_voice
+            MYSQL_USER: admin
+            MYSQL_PASSWORD: 12345
+            MYSQL_ROOT_PASSWORD: 12345
+        volumes:
+            - db-volume:/var/lib/mysql
+        networks:
+            - backend
+#    main:
+#      container_name: gpt-api
+#      build:
+#        context: ./docker/
+#        target: development
+#      volumes:
+#        - .:/usr/src/app
+#        - /node_modules
+#      ports:
+#        - 8081:80
+#      command: npm run start:dev
+#      env_file:
+#        - .env
+#      networks:
+#        - backend   
+volumes:
+    db-volume:
+
+networks:
+    backend:
