@@ -14,6 +14,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     ConfigModule.forRoot({
       isGlobal: true,
       load: [config],
+      envFilePath: process.env.NODE_ENV === 'dev' ? '.env.local' : '.env',
     }),
     TypeOrmModule.forRootAsync({
       useFactory: () => ({
