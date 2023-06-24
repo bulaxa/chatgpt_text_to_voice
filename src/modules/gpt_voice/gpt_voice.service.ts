@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { CreateGptVoiceDto } from './dto/create-gpt_voice.dto';
-import { UpdateGptVoiceDto } from './dto/update-gpt_voice.dto';
 import { Elevenlabs } from './common/elevenlabs';
 import { Openai } from '../gpt_text/common/openai';
 
@@ -19,21 +18,5 @@ export class GptVoiceService {
     } catch (error) {
       console.log(error);
     }
-  }
-
-  findAll() {
-    return `This action returns all gptVoice`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} gptVoice`;
-  }
-
-  update(id: number, updateGptVoiceDto: UpdateGptVoiceDto) {
-    return `This action updates a #${id} gptVoice`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} gptVoice`;
   }
 }

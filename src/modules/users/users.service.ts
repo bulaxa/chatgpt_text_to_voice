@@ -1,31 +1,57 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from './entities/user.entity';
+import UserEntity from './entities/user.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { AuthGuard } from 'src/config/auth.guard';
 
 @Injectable()
 export class UsersService {
-  //teste
-  private readonly users: User[] = [
-    {
-      userId: 1,
-      username: 'rafael',
-      password: '12345',
-    },
-  ];
+  constructor(
+    @InjectRepository(UserEntity)
+    private usersRepository: Repository<UserEntity>,
+    private authGuard: AuthGuard,
+  ) {}
 
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  async create(createUserDto: CreateUserDto) {
+    const user = await this.usersRepository.findOneBy({
+      username: createUserDto.username,
+    });
+
+    if (user) {
+      throw new HttpException('Usuário já existe', HttpStatus.BAD_REQUEST);
+    }
+    createUserDto.password = await this.authGuard.cryptPassword(
+      createUserDto.password,
+    );
+    const userData = this.usersRepository.save(createUserDto);
+    return userData;
   }
 
   async findAll() {
-    return 'This action adds a new user';
+    try {
+      return this.usersRepository.find();
+    } catch (error) {
+      console.log(error);
+    }
   }
 
-  async findOne(username: string): Promise<User | undefined> {
+  async findOne(id: number): Promise<UserEntity> {
     try {
-      const userData = this.users.find((user) => user.username === username);
+      const userData = await this.usersRepository.findOneBy({ id });
       return userData;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async findByLogin(username: string): Promise<UserEntity> {
+    try {
+      return await this.usersRepository.findOneBy({
+        username: username,
+        isActive: true,
+      });
     } catch (error) {
       console.log(error);
     }

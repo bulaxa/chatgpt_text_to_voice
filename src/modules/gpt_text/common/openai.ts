@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { CreateGptTextDto } from '../dto/create-gpt_text.dto';
 import { Configuration, OpenAIApi } from 'openai';
@@ -31,6 +31,7 @@ export class Openai {
       return response;
     } catch (error) {
       console.log(error);
+      throw new HttpException(error, HttpStatus.BAD_REQUEST);
     }
   }
 }

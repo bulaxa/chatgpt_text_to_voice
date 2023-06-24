@@ -1,22 +1,14 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  Res,
-} from '@nestjs/common';
+import { Controller, Post, Body, Res, UseGuards } from '@nestjs/common';
 import { GptVoiceService } from './gpt_voice.service';
-import { UpdateGptVoiceDto } from './dto/update-gpt_voice.dto';
 import { CreateGptVoiceDto } from './dto/create-gpt_voice.dto';
 import type { Response } from 'express';
+import { AuthGuard } from 'src/config/auth.guard';
 
 @Controller('gpt-voice')
 export class GptVoiceController {
   constructor(private readonly gptVoiceService: GptVoiceService) {}
 
+  @UseGuards(AuthGuard)
   @Post()
   async create(
     @Body() createGptVoiceDto: CreateGptVoiceDto,
@@ -27,28 +19,5 @@ export class GptVoiceController {
       'Content-Type': 'application/json',
     });
     res.send(resultData);
-  }
-
-  @Get()
-  findAll() {
-    return this.gptVoiceService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.gptVoiceService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateGptVoiceDto: UpdateGptVoiceDto,
-  ) {
-    return this.gptVoiceService.update(+id, updateGptVoiceDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.gptVoiceService.remove(+id);
   }
 }

@@ -1,7 +1,28 @@
-export class User {
-  public userId: number;
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
-  public username: string;
+@Entity('user')
+export default class UserEntity {
+  @PrimaryGeneratedColumn()
+  id: number;
 
-  public password: string;
+  @Column()
+  username: string;
+
+  @Column()
+  password: string;
+
+  @Column({ default: true })
+  isActive: boolean;
+
+  @CreateDateColumn()
+  createAt: Date;
+
+  @UpdateDateColumn()
+  updateAt: Date;
 }
