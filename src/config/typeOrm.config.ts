@@ -11,7 +11,7 @@ export default new DataSource({
   type: 'mysql',
   host: configService.get('DB_HOST'),
   port: 3306,
-  username: configService.get('USERNAME'),
+  username: configService.get('DB_USERNAME'),
   password: configService.get('PASSWORD'),
   database: configService.get('DATABASE'),
   entities: [UserEntity],

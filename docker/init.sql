@@ -1,0 +1,2 @@
+CREATE DATABASE IF NOT EXISTS gpt_voice;
+USE gpt_voice;

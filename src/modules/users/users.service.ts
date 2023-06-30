@@ -5,6 +5,8 @@ import UserEntity from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AuthGuard } from 'src/config/auth.guard';
+import GetUserMapper from './mappers/getUser.mapper';
+import { GetUserDto } from './dto/get-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -12,6 +14,7 @@ export class UsersService {
     @InjectRepository(UserEntity)
     private usersRepository: Repository<UserEntity>,
     private authGuard: AuthGuard,
+    private userMapper: GetUserMapper,
   ) {}
 
   async create(createUserDto: CreateUserDto) {
@@ -37,10 +40,10 @@ export class UsersService {
     }
   }
 
-  async findOne(id: number): Promise<UserEntity> {
+  async findOne(id: number): Promise<GetUserDto> {
     try {
       const userData = await this.usersRepository.findOneBy({ id });
-      return userData;
+      return this.userMapper.getUser(userData);
     } catch (error) {
       console.log(error);
     }
