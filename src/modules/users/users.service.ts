@@ -4,9 +4,10 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import UserEntity from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { AuthGuard } from 'src/config/auth.guard';
+import { AuthGuard } from '../../config/auth.guard';
 import GetUserMapper from './mappers/getUser.mapper';
 import { GetUserDto } from './dto/get-user.dto';
+import CreateUserMapper from './mappers/createUser.mapper';
 
 @Injectable()
 export class UsersService {
@@ -14,10 +15,11 @@ export class UsersService {
     @InjectRepository(UserEntity)
     private usersRepository: Repository<UserEntity>,
     private authGuard: AuthGuard,
-    private userMapper: GetUserMapper,
+    private getUserMapper: GetUserMapper,
+    private createUserMapper: CreateUserMapper,
   ) {}
 
-  async create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto): Promise<any> {
     const user = await this.usersRepository.findOneBy({
       username: createUserDto.username,
     });
@@ -28,8 +30,8 @@ export class UsersService {
     createUserDto.password = await this.authGuard.cryptPassword(
       createUserDto.password,
     );
-    const userData = this.usersRepository.save(createUserDto);
-    return userData;
+    const userData = await this.usersRepository.save(createUserDto);
+    return this.createUserMapper.createUser(userData);
   }
 
   async findAll() {
@@ -43,7 +45,7 @@ export class UsersService {
   async findOne(id: number): Promise<GetUserDto> {
     try {
       const userData = await this.usersRepository.findOneBy({ id });
-      return this.userMapper.getUser(userData);
+      return this.getUserMapper.getUser(userData);
     } catch (error) {
       console.log(error);
     }
@@ -64,7 +66,11 @@ export class UsersService {
     return `This action updates a #${id} user`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async delete(id: number) {
+    try{
+      return await this.usersRepository.delete({ id })
+    }catch(error){
+
+    }
   }
 }

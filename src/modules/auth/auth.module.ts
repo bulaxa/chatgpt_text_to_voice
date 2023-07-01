@@ -15,6 +15,7 @@ import { AuthJwt } from '../auth/helpers/auth';
       global: true,
       useFactory: async () => ({
         secret: process.env.JWT_TOKEN,
+        signOptions: { expiresIn: '600s' },
       }),
     }),
   ],

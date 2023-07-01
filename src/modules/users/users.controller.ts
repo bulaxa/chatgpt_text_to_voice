@@ -7,11 +7,12 @@ import {
   Param,
   Delete,
   UseGuards,
+  Req,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { AuthGuard } from 'src/config/auth.guard';
+import { AuthGuard } from '../../config/auth.guard';
 
 @Controller('users')
 export class UsersController {
@@ -30,7 +31,7 @@ export class UsersController {
 
   @UseGuards(AuthGuard)
   @Get(':id')
-  findOne(@Param('id') id: number) {
+  findOne(@Param('id') id: number, @Req() request: Request) {
     return this.usersService.findOne(id);
   }
 
@@ -43,6 +44,6 @@ export class UsersController {
   @UseGuards(AuthGuard)
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+    return this.usersService.delete(+id);
   }
 }

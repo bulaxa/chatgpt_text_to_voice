@@ -16,7 +16,7 @@ export class AuthJwt {
     if (!isMatch) {
       throw new UnauthorizedException();
     }
-    const payload = { sub: user.id, username: user.username };
+    const payload = { sub: user.id, username: user.username, isActive: user.isActive };
     return await this.jwtService.signAsync(payload);
   }
 }
