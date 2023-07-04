@@ -34,7 +34,7 @@ export class UsersService {
     return this.createUserMapper.createUser(userData);
   }
 
-  async findAll() {
+  async findAll(): Promise<UserEntity[]> {
     try {
       return this.usersRepository.find();
     } catch (error) {

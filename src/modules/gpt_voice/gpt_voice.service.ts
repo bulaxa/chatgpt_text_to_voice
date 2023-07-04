@@ -9,12 +9,12 @@ export class GptVoiceService {
 
   async create(createGptVoiceDto: CreateGptVoiceDto) {
     try {
-      const text_response = await this.openai.request(createGptVoiceDto);
-      const voice_request = await this.elevenlabs.request(
-        text_response.data.choices[0],
+      const textResponse = await this.openai.request(createGptVoiceDto);
+      const voiceRequest = await this.elevenlabs.request(
+        textResponse.data.choices[0],
       );
 
-      return voice_request;
+      return voiceRequest;
     } catch (error) {
       console.log(error);
     }

@@ -8,11 +8,11 @@ export class Elevenlabs {
   constructor(private configService: ConfigService) {}
 
   async request(content: CreateGptVoiceDto): Promise<any> {
-    const voiceData = this.configService.get<any>('VOICE');
+    const envData = this.configService.get<any>('VOICE');
 
     const urlCreateVoice =
-      voiceData.PATH +
-      voiceData.POST +
+    envData.PATH +
+    envData.POST +
       '21m00Tcm4TlvDq8ikWAM?optimize_streaming_latency=0';
     try {
       const response = await fetch(urlCreateVoice, {
@@ -20,7 +20,7 @@ export class Elevenlabs {
         headers: {
           accept: 'audio/mpeg',
           'content-type': 'application/json',
-          'xi-api-key': voiceData.KEY,
+          'xi-api-key': envData.KEY,
         },
         body: JSON.stringify({
           text: content.text,

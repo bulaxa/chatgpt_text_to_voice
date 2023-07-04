@@ -7,7 +7,7 @@ export class GptTextService {
   constructor(private openai: Openai) {}
 
   async create(createGptTextDto: CreateGptTextDto) {
-    const text_response = await this.openai.request(createGptTextDto);
-    return text_response;
+    const textResponse = await this.openai.request(createGptTextDto);
+    return textResponse;
   }
 }

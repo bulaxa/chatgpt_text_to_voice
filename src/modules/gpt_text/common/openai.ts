@@ -8,11 +8,11 @@ export class Openai {
   constructor(private configService: ConfigService) {}
 
   async request(content: CreateGptTextDto): Promise<any> {
-    const textData = this.configService.get<any>('OPENAI');
+    const envData = this.configService.get<any>('OPENAI');
     try {
       const configuration = new Configuration({
-        apiKey: textData.KEY,
-        basePath: textData.PATH,
+        apiKey: envData.KEY,
+        basePath: envData.PATH,
       });
 
       const openai = new OpenAIApi(configuration);
