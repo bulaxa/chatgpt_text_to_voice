@@ -15,23 +15,25 @@ export class Openai {
         basePath: envData.PATH,
       });
 
-      const openai = new OpenAIApi(configuration);
-
-      const response = await openai.createCompletion({
-        model: 'text-davinci-003',
-        prompt: content.text,
-        temperature: 0.7,
-        max_tokens: 256,
-        top_p: 1,
-        frequency_penalty: 0,
-        presence_penalty: 0,
-        stop: ['Human: ', 'AI: '],
-      });
-
+      const response = await this.gptResultText(configuration, content.text);
       return response;
     } catch (error) {
       console.log(error);
       throw new HttpException(error, HttpStatus.BAD_REQUEST);
     }
+  }
+
+  private async gptResultText(configuration: Configuration, text: string) {
+    const openai = new OpenAIApi(configuration);
+    return await openai.createCompletion({
+      model: 'text-davinci-003',
+      prompt: text,
+      temperature: 0.7,
+      max_tokens: 256,
+      top_p: 1,
+      frequency_penalty: 0,
+      presence_penalty: 0,
+      stop: ['Human: ', 'AI: '],
+    });
   }
 }

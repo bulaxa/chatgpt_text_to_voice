@@ -24,8 +24,10 @@ export class AuthGuard implements CanActivate {
         secret: process.env.JWT_TOKEN,
       });
 
-      if(request['params'].id != payload.sub){
-        throw new UnauthorizedException();
+      if (request['params'].id) {
+        if (request['params'].id != payload.sub) {
+          throw new UnauthorizedException();
+        }
       }
 
       request['user'] = payload;

@@ -14,7 +14,10 @@ export class GptVoiceService {
         textResponse.data.choices[0],
       );
 
-      return voiceRequest;
+      return {
+        voice: voiceRequest,
+        text: textResponse,
+      };
     } catch (error) {
       console.log(error);
     }
