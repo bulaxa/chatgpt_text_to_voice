@@ -14,10 +14,10 @@ export class GptVoiceService {
         textResponse.data.choices[0],
       );
 
-      return {
+      return JSON.stringify({
         voice: voiceRequest,
         text: textResponse,
-      };
+      });
     } catch (error) {
       console.log(error);
     }

@@ -1,7 +1,7 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { CreateGptVoiceDto } from '../dto/create-gpt_voice.dto';
-import * as fs from 'fs';
+//import * as fs from 'fs';
 
 @Injectable()
 export class Elevenlabs {
@@ -21,13 +21,13 @@ export class Elevenlabs {
 
       if (response.status != HttpStatus.OK) {
         return {
-          status: response.statusText,
+          statusCode: response.statusText,
           data: null,
         };
       }
 
       return {
-        status: response.statusText,
+        statusCode: response.statusText,
         data: audioBase64,
       };
     } catch (error) {

@@ -25,15 +25,26 @@ export class Openai {
 
   private async gptResultText(configuration: Configuration, text: string) {
     const openai = new OpenAIApi(configuration);
-    return await openai.createCompletion({
-      model: 'text-davinci-003',
-      prompt: text,
-      temperature: 0.7,
-      max_tokens: 256,
-      top_p: 1,
-      frequency_penalty: 0,
-      presence_penalty: 0,
-      stop: ['Human: ', 'AI: '],
-    });
+    return await openai
+      .createCompletion({
+        model: 'text-davinci-003',
+        prompt: text,
+        temperature: 0.7,
+        max_tokens: 256,
+        top_p: 1,
+        frequency_penalty: 0,
+        presence_penalty: 0,
+        stop: ['Human: ', 'AI: '],
+      })
+      .catch((error) => {
+        console.log(error.response.data);
+        throw new HttpException(
+          error.response.statusText,
+          error.response.status,
+          {
+            cause: error.response.data.error.message,
+          },
+        );
+      });
   }
 }
