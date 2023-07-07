@@ -16,6 +16,9 @@ export class Openai {
       });
 
       const response = await this.gptResultText(configuration, content.text);
+      if (!response.data) {
+        throw new HttpException(response.data, 400);
+      }
       return response;
     } catch (error) {
       console.log(error);
