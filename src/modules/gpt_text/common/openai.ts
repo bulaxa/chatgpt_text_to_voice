@@ -2,9 +2,10 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { CreateGptTextDto } from '../dto/create-gpt_text.dto';
 import { Configuration, OpenAIApi } from 'openai';
+import IApiInterface from 'src/interfaces/IApi.interface';
 
 @Injectable()
-export class Openai {
+export class Openai implements IApiInterface {
   constructor(private configService: ConfigService) {}
 
   async request(content: CreateGptTextDto): Promise<any> {

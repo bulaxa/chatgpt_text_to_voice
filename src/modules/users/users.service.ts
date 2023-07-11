@@ -67,10 +67,10 @@ export class UsersService {
   }
 
   async delete(id: number) {
-    try{
-      return await this.usersRepository.delete({ id })
-    }catch(error){
-
+    try {
+      return await this.usersRepository.delete({ id });
+    } catch (error) {
+      console.log(error);
     }
   }
 }

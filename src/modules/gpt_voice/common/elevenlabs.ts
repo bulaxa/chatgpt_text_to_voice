@@ -1,11 +1,12 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { CreateGptVoiceDto } from '../dto/create-gpt_voice.dto';
+import IApiInterface from 'src/interfaces/IApi.interface';
 //import * as fs from 'fs';
 
 @Injectable()
-export class Elevenlabs {
-  private envData;
+export class Elevenlabs implements IApiInterface {
+  private envData: any;
   constructor(private configService: ConfigService) {
     this.envData = this.configService.get<any>('VOICE');
   }
