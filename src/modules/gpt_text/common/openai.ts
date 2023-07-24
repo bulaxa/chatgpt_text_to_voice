@@ -17,10 +17,10 @@ export class Openai implements IApiInterface {
       });
 
       const response = await this.gptResultText(configuration, content.text);
-      if (!response.data) {
-        throw new HttpException(response.data, 400);
+      if (response.data) {
+        return response;
       }
-      return response;
+      throw new HttpException(response.data, 400);
     } catch (error) {
       console.log(error);
       throw new HttpException(error, HttpStatus.BAD_REQUEST);
