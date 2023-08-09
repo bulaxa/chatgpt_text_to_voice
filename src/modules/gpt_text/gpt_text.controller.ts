@@ -2,7 +2,7 @@ import { Controller, Post, Body, Response, UseGuards } from '@nestjs/common';
 import { GptTextService } from './gpt_text.service';
 import { CreateGptTextDto } from './dto/create-gpt_text.dto';
 import { Response as Res } from 'express';
-import { AuthGuard } from 'src/config/auth.guard';
+import { AuthGuard } from '../../config/auth.guard';
 
 @Controller('gpt-text')
 export class GptTextController {
