@@ -1,32 +1,54 @@
-import { HttpService } from '@nestjs/axios';
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import axios, { AxiosError, AxiosRequestConfig } from 'axios';
-import { catchError, firstValueFrom, map } from 'rxjs';
 import { CreateGptVoiceDto } from '../dto/create-gpt_voice.dto';
-import * as fs from 'fs';
+import IApiInterface from 'src/interfaces/IApi.interface';
+//import * as fs from 'fs';
 
 @Injectable()
-export class Elevenlabs {
-  constructor(private configService: ConfigService) {}
+export class Elevenlabs implements IApiInterface {
+  private envData: any;
+  constructor(private configService: ConfigService) {
+    this.envData = this.configService.get<any>('VOICE');
+  }
 
   async request(content: CreateGptVoiceDto): Promise<any> {
-    const voiceData = this.configService.get<any>('VOICE');
-
     const urlCreateVoice =
-      voiceData.PATH +
-      voiceData.POST +
+      this.envData.PATH +
+      this.envData.POST +
       '21m00Tcm4TlvDq8ikWAM?optimize_streaming_latency=0';
+    try {
+      const response = await this.gtpResultVoice(urlCreateVoice, content.text);
+      const audioBase64 = await this.generateAudioBase64(response);
 
-    const response = await fetch(urlCreateVoice, {
+      if (response.status != HttpStatus.OK) {
+        return {
+          statusCode: response.statusText,
+          data: null,
+        };
+      }
+
+      return {
+        statusCode: response.statusText,
+        data: audioBase64,
+      };
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  private async gtpResultVoice(
+    urlCreateVoice: string,
+    text: string,
+  ): Promise<any> {
+    return await fetch(urlCreateVoice, {
       method: 'POST',
       headers: {
         accept: 'audio/mpeg',
         'content-type': 'application/json',
-        'xi-api-key': voiceData.KEY,
+        'xi-api-key': this.envData.KEY,
       },
       body: JSON.stringify({
-        text: content.text,
+        text: text,
         model_id: 'eleven_multilingual_v1',
         voice_settings: {
           stability: 0,
@@ -34,16 +56,20 @@ export class Elevenlabs {
         },
       }),
     });
+  }
 
-    const arrayBuffer = await response.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
+  private async generateAudioBase64(response: any) {
+    try {
+      const arrayBuffer = await response.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
+      //teste de arquivo
+      //const fileName = './voices/voice.mp3';
+      //fs.writeFileSync(fileName, buffer);
+      ///
 
-    fs.writeFile('/voices/voice.mp3', buffer, (file) => {
-      console.log(file);
-    });
-    return JSON.stringify({
-      arquivo: 'voice.mp3',
-      status: 'OK',
-    });
+      return buffer.toString('base64');
+    } catch (error) {
+      console.log(error);
+    }
   }
 }
